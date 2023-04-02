@@ -17,7 +17,7 @@ use Serafim\PackedArray\UInt16Array;
 use Serafim\PackedArray\UInt8Array;
 
 #[Group('unit'), Group('packed-array')]
-final class ReadWriteTestCase extends TestCase
+final class ReadWriteTest extends TestCase
 {
     public static function arraysDataProvider(): array
     {
