@@ -28,10 +28,12 @@ abstract class TestCase extends BaseTestCase
 
     protected function skipIfAssertionDisabled(): void
     {
-        if ((int)ini_get('zend.assertions') !== 1) {
-            $this->markTestSkipped('zend.assertions=1 php.ini option is required to perform this test');
+        if ((int)ini_get('zend.assertions') === 1) {
+            \assert_options(\ASSERT_ACTIVE, true);
+
+            return;
         }
 
-        \assert_options(\ASSERT_ACTIVE, true);
+        $this->markTestSkipped('zend.assertions=1 or zend.assertions=0 php.ini option is required to perform this test');
     }
 }
