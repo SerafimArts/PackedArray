@@ -36,11 +36,13 @@ array (number of elements).
 > See the [bin/memory-usage.php](bin/memory-usage.php) for details on how the
 > this RAM consumption was calculated.
 
+### Read/Write
+
 Please note that such arrays are designed to store a large amount of data,
 however, they are noticeably slower than those builtin PHP arrays during reading
 and writing.
 
-### Reading
+#### Reading
 
 | subject             | revs   | its | mem_peak | mode    | rstdev |
 |---------------------|--------|-----|----------|---------|--------|
@@ -56,7 +58,7 @@ and writing.
 | benchPackedUInt32be | 100000 | 10  | 1.291mb  | 0.163μs | ±0.86% |
 
 
-### Writing
+#### Writing
 
 | subject             | revs   | its | mem_peak | mode    | rstdev |
 |---------------------|--------|-----|----------|---------|--------|
