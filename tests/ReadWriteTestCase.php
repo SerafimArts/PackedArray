@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Serafim\PackedArray\Tests;
 
-use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Serafim\PackedArray\Endianness;

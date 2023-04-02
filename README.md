@@ -36,6 +36,42 @@ array (number of elements).
 > See the [bin/memory-usage.php](bin/memory-usage.php) for details on how the
 > this RAM consumption was calculated.
 
+Please note that such arrays are designed to store a large amount of data,
+however, they are noticeably slower than those builtin PHP arrays during reading
+and writing.
+
+### Reading
+
+```
++---------------------+---------+--------+
+| subject             | mode    | rstdev |
++---------------------+---------+--------+
+| benchNative         | 0.014μs | ±1.92% |
+| benchSplFixedArray  | 0.023μs | ±0.94% |
+| benchPackedInt8     | 0.075μs | ±1.36% |
+| benchPackedUInt8    | 0.070μs | ±1.04% |
+| benchPackedInt16    | 0.106μs | ±0.72% |
+| benchPackedUInt16le | 0.098μs | ±4.91% |
+| benchPackedUInt16be | 0.096μs | ±0.38% |
++---------------------+---------+--------+
+```
+
+### Writing
+
+```
++---------------------+---------+--------+
+| subject             | mode    | rstdev |
++---------------------+---------+--------+
+| benchNative         | 0.014μs | ±1.88% |
+| benchSplFixedArray  | 0.027μs | ±2.21% |
+| benchPackedInt8     | 0.080μs | ±0.46% |
+| benchPackedUInt8    | 0.081μs | ±0.93% |
+| benchPackedInt16    | 0.138μs | ±1.14% |
+| benchPackedUInt16le | 0.152μs | ±0.98% |
+| benchPackedUInt16be | 0.151μs | ±0.52% |
++---------------------+---------+--------+
+```
+
 ## Installation
 
 This library is available as Composer repository and can be 
