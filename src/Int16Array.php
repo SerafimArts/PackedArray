@@ -84,7 +84,7 @@ final class Int16Array extends TypedArray
         assert($value <= 32767, ValueRangeException::fromOverflow((string)$this, $value));
 
         $this->data[$offset] = \chr($value);
-            $this->data[$offset + 1] = \chr($value >> 8);
+        $this->data[$offset + 1] = \chr($value >> 8);
     }
 
     public function offsetUnset(mixed $offset): void
@@ -95,7 +95,7 @@ final class Int16Array extends TypedArray
 
         $value = 0;
         $this->data[$offset] = \chr($value);
-            $this->data[$offset + 1] = \chr($value >> 8);
+        $this->data[$offset + 1] = \chr($value >> 8);
     }
 
     public function getIterator(): \Traversable

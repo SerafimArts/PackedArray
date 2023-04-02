@@ -87,7 +87,7 @@ foreach ($samples as $sample) {
         /** @psalm-suppress all */
         $sample->unpack = \implode("\n            ", \explode("\n", $sample->unpack));
         /** @psalm-suppress all */
-        $sample->pack = \implode("\n            ", \explode("\n", $sample->pack));
+        $sample->pack = \implode("\n        ", \explode("\n", $sample->pack));
     }
 
 
