@@ -46,14 +46,15 @@ and writing.
 +---------------------+---------+--------+
 | subject             | mode    | rstdev |
 +---------------------+---------+--------+
-| benchNative         | 0.014μs | ±1.92% |
-| benchSplFixedArray  | 0.023μs | ±0.94% |
-| benchPackedInt8     | 0.075μs | ±1.36% |
-| benchPackedUInt8    | 0.070μs | ±1.04% |
-| benchPackedInt16    | 0.106μs | ±0.72% |
-| benchPackedUInt16le | 0.098μs | ±4.91% |
-| benchPackedUInt16be | 0.096μs | ±0.38% |
+| benchNative         | 0.014μs | ±0.64% |
+| benchSplFixedArray  | 0.023μs | ±1.54% |
+| benchPackedInt8     | 0.075μs | ±1.78% |
+| benchPackedUInt8    | 0.070μs | ±0.94% |
+| benchPackedInt16    | 0.089μs | ±1.57% |
+| benchPackedUInt16le | 0.097μs | ±2.58% |
+| benchPackedUInt16be | 0.096μs | ±1.57% |
 +---------------------+---------+--------+
+
 ```
 
 ### Writing
@@ -62,14 +63,15 @@ and writing.
 +---------------------+---------+--------+
 | subject             | mode    | rstdev |
 +---------------------+---------+--------+
-| benchNative         | 0.014μs | ±1.88% |
-| benchSplFixedArray  | 0.027μs | ±2.21% |
-| benchPackedInt8     | 0.080μs | ±0.46% |
-| benchPackedUInt8    | 0.081μs | ±0.93% |
-| benchPackedInt16    | 0.138μs | ±1.14% |
-| benchPackedUInt16le | 0.152μs | ±0.98% |
-| benchPackedUInt16be | 0.151μs | ±0.52% |
+| benchNative         | 0.014μs | ±1.58% |
+| benchSplFixedArray  | 0.027μs | ±2.62% |
+| benchPackedInt8     | 0.081μs | ±0.96% |
+| benchPackedUInt8    | 0.080μs | ±0.34% |
+| benchPackedInt16    | 0.097μs | ±0.77% |
+| benchPackedUInt16le | 0.108μs | ±0.84% |
+| benchPackedUInt16be | 0.108μs | ±3.47% |
 +---------------------+---------+--------+
+
 ```
 
 ## Installation

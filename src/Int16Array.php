@@ -68,9 +68,9 @@ final class Int16Array extends TypedArray
         assert($offset >= 0, OffsetRangeException::fromUnderflow((string)$this, $offset));
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
-        return \ord($this->data[$offset + 1]) & 0x80
-                ? (\ord($this->data[$offset]) | \ord($this->data[$offset + 1]) << 8) - 0x10000
-                : \ord($this->data[$offset]) | \ord($this->data[$offset + 1]) << 8;
+        return ($lo = \ord($this->data[$offset + 1])) & 0x80
+                ? (\ord($this->data[$offset]) | $lo << 8) - 0x10000
+                : \ord($this->data[$offset]) | $lo << 8;
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
@@ -83,10 +83,8 @@ final class Int16Array extends TypedArray
         assert($value >= -32768, ValueRangeException::fromUnderflow((string)$this, $value));
         assert($value <= 32767, ValueRangeException::fromOverflow((string)$this, $value));
 
-        [$this->data[$offset], $this->data[$offset + 1]] = [
-                \chr($value),
-                \chr($value >> 8),
-            ];
+        $this->data[$offset] = \chr($value);
+            $this->data[$offset + 1] = \chr($value >> 8);
     }
 
     public function offsetUnset(mixed $offset): void
@@ -96,18 +94,16 @@ final class Int16Array extends TypedArray
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
         $value = 0;
-        [$this->data[$offset], $this->data[$offset + 1]] = [
-                \chr($value),
-                \chr($value >> 8),
-            ];
+        $this->data[$offset] = \chr($value);
+            $this->data[$offset + 1] = \chr($value >> 8);
     }
 
     public function getIterator(): \Traversable
     {
         for ($offset = 0; $offset < $this->bytes; $offset += 2) {
-            yield $offset => \ord($this->data[$offset + 1]) & 0x80
-                ? (\ord($this->data[$offset]) | \ord($this->data[$offset + 1]) << 8) - 0x10000
-                : \ord($this->data[$offset]) | \ord($this->data[$offset + 1]) << 8;
+            yield $offset => ($lo = \ord($this->data[$offset + 1])) & 0x80
+                ? (\ord($this->data[$offset]) | $lo << 8) - 0x10000
+                : \ord($this->data[$offset]) | $lo << 8;
         }
     }
 }

@@ -47,15 +47,13 @@ $samples = [
         to: 32767,
         bytesPerElement: 2,
         unpack: <<<'PHP'
-            \ord($this->data[$offset + 1]) & 0x80
-                ? (\ord($this->data[$offset]) | \ord($this->data[$offset + 1]) << 8) - 0x10000
-                : \ord($this->data[$offset]) | \ord($this->data[$offset + 1]) << 8;
+            ($lo = \ord($this->data[$offset + 1])) & 0x80
+                ? (\ord($this->data[$offset]) | $lo << 8) - 0x10000
+                : \ord($this->data[$offset]) | $lo << 8;
             PHP,
         pack: <<<'PHP'
-            [$this->data[$offset], $this->data[$offset + 1]] = [
-                \chr($value),
-                \chr($value >> 8),
-            ];
+            $this->data[$offset] = \chr($value);
+            $this->data[$offset + 1] = \chr($value >> 8);
             PHP,
     ),
     new Sample(
@@ -71,9 +69,13 @@ $samples = [
                 : \ord($this->data[$offset + 1]) | \ord($this->data[$offset]) << 8;
             PHP,
         pack: <<<'PHP'
-            [$this->data[$offset], $this->data[$offset + 1]] = $this->endianness === Endianness::LITTLE
-                ? [\chr($value), \chr($value >> 8)]
-                : [\chr($value >> 8), \chr($value)];
+            if ($this->endianness === Endianness::LITTLE) {
+                $this->data[$offset] = \chr($value);
+                $this->data[$offset + 1] = \chr($value >> 8);
+            } else {
+                $this->data[$offset] = \chr($value >> 8);
+                $this->data[$offset + 1] = \chr($value);
+            }
             PHP,
         endianness: true,
     ),

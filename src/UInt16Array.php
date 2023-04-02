@@ -93,9 +93,13 @@ final class UInt16Array extends TypedArray
         assert($value >= 0, ValueRangeException::fromUnderflow((string)$this, $value));
         assert($value <= 65535, ValueRangeException::fromOverflow((string)$this, $value));
 
-        [$this->data[$offset], $this->data[$offset + 1]] = $this->endianness === Endianness::LITTLE
-                ? [\chr($value), \chr($value >> 8)]
-                : [\chr($value >> 8), \chr($value)];
+        if ($this->endianness === Endianness::LITTLE) {
+                $this->data[$offset] = \chr($value);
+                $this->data[$offset + 1] = \chr($value >> 8);
+            } else {
+                $this->data[$offset] = \chr($value >> 8);
+                $this->data[$offset + 1] = \chr($value);
+            }
     }
 
     public function offsetUnset(mixed $offset): void
@@ -105,9 +109,13 @@ final class UInt16Array extends TypedArray
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
         $value = 0;
-        [$this->data[$offset], $this->data[$offset + 1]] = $this->endianness === Endianness::LITTLE
-                ? [\chr($value), \chr($value >> 8)]
-                : [\chr($value >> 8), \chr($value)];
+        if ($this->endianness === Endianness::LITTLE) {
+                $this->data[$offset] = \chr($value);
+                $this->data[$offset + 1] = \chr($value >> 8);
+            } else {
+                $this->data[$offset] = \chr($value >> 8);
+                $this->data[$offset + 1] = \chr($value);
+            }
     }
 
     public function getIterator(): \Traversable
