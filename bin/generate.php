@@ -79,6 +79,48 @@ $samples = [
             PHP,
         endianness: true,
     ),
+    new Sample(
+        class: 'Int32Array',
+        type: 'int',
+        default: '0',
+        from: -2147483648,
+        to: 2147483647,
+        bytesPerElement: 4,
+        unpack: <<<'PHP'
+            (int)(\unpack('l', \substr($this->data, $offset, 4))[1]);
+            PHP,
+        pack: <<<'PHP'
+            $this->data[$offset] = \chr($value);
+            $this->data[$offset + 1] = \chr($value >> 8);
+            $this->data[$offset + 2] = \chr($value >> 16);
+            $this->data[$offset + 3] = \chr($value >> 24);
+            PHP,
+    ),
+    new Sample(
+        class: 'UInt32Array',
+        type: 'int',
+        default: '0',
+        from: 0,
+        to: 4294967295,
+        bytesPerElement: 4,
+        unpack: <<<'PHP'
+            (int)(\unpack($this->endianness === Endianness::LITTLE ? 'V' : 'N', \substr($this->data, $offset, 4))[1]);
+            PHP,
+        pack: <<<'PHP'
+            if ($this->endianness === Endianness::LITTLE) {
+                $this->data[$offset] = \chr($value);
+                $this->data[$offset + 1] = \chr($value >> 8);
+                $this->data[$offset + 2] = \chr($value >> 16);
+                $this->data[$offset + 3] = \chr($value >> 24);
+            } else {
+                $this->data[$offset] = \chr($value >> 24);
+                $this->data[$offset + 1] = \chr($value >> 16);
+                $this->data[$offset + 2] = \chr($value >> 8);
+                $this->data[$offset + 3] = \chr($value);
+            }
+            PHP,
+        endianness: true,
+    ),
 ];
 
 foreach ($samples as $sample) {

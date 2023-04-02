@@ -10,9 +10,11 @@ use PhpBench\Attributes\Revs;
 use PhpBench\Attributes\Warmup;
 use Serafim\PackedArray\Endianness;
 use Serafim\PackedArray\Int16Array;
+use Serafim\PackedArray\Int32Array;
 use Serafim\PackedArray\Int8Array;
 use Serafim\PackedArray\TypedArrayInterface;
 use Serafim\PackedArray\UInt16Array;
+use Serafim\PackedArray\UInt32Array;
 use Serafim\PackedArray\UInt8Array;
 
 #[Revs(100_000), Warmup(2), Iterations(10)]
@@ -26,6 +28,9 @@ final class ArrayReadBench
     private readonly TypedArrayInterface $int16;
     private readonly TypedArrayInterface $uint16le;
     private readonly TypedArrayInterface $uint16be;
+    private readonly TypedArrayInterface $int32;
+    private readonly TypedArrayInterface $uint32le;
+    private readonly TypedArrayInterface $uint32be;
 
     public function prepare(): void
     {
@@ -37,6 +42,9 @@ final class ArrayReadBench
         $this->int16 = Int16Array::new(2);
         $this->uint16le = UInt16Array::new(2, Endianness::LITTLE);
         $this->uint16be = UInt16Array::new(2, Endianness::BIG);
+        $this->int32 = Int32Array::new(2);
+        $this->uint32le = UInt32Array::new(2, Endianness::LITTLE);
+        $this->uint32be = UInt32Array::new(2, Endianness::BIG);
 
         // Init min/max bounds
         foreach (\get_object_vars($this) as $value) {
@@ -87,5 +95,23 @@ final class ArrayReadBench
     {
         $min = $this->uint16be[0];
         $max = $this->uint16be[1];
+    }
+
+    public function benchPackedInt32(): void
+    {
+        $min = $this->int32[0];
+        $max = $this->int32[1];
+    }
+
+    public function benchPackedUInt32le(): void
+    {
+        $min = $this->uint32le[0];
+        $max = $this->uint32le[1];
+    }
+
+    public function benchPackedUInt32be(): void
+    {
+        $min = $this->uint32be[0];
+        $max = $this->uint32be[1];
     }
 }

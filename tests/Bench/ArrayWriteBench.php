@@ -10,9 +10,11 @@ use PhpBench\Attributes\Revs;
 use PhpBench\Attributes\Warmup;
 use Serafim\PackedArray\Endianness;
 use Serafim\PackedArray\Int16Array;
+use Serafim\PackedArray\Int32Array;
 use Serafim\PackedArray\Int8Array;
 use Serafim\PackedArray\TypedArrayInterface;
 use Serafim\PackedArray\UInt16Array;
+use Serafim\PackedArray\UInt32Array;
 use Serafim\PackedArray\UInt8Array;
 
 #[Revs(100_000), Warmup(2), Iterations(10)]
@@ -79,5 +81,23 @@ final class ArrayWriteBench
     {
         $this->uint16be[0] = 0;
         $this->uint16be[1] = 65535;
+    }
+
+    public function benchPackedInt32(): void
+    {
+        $this->int32[0] = -2147483648;
+        $this->int32[1] = 2147483647;
+    }
+
+    public function benchPackedUInt32le(): void
+    {
+        $this->uint32le[0] = 0;
+        $this->uint32le[1] = 4294967295;
+    }
+
+    public function benchPackedUInt32be(): void
+    {
+        $this->uint32be[0] = 0;
+        $this->uint32be[1] = 4294967295;
     }
 }
