@@ -6,7 +6,7 @@
          colors="true"
          processIsolation="false"
          stopOnFailure="false"
-         cacheDirectory=".phpunit.result.cache"
+         cacheDirectory="vendor/.phpunit.result.cache"
          backupStaticProperties="false"
 >
     <coverage>
