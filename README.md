@@ -33,6 +33,9 @@ array (number of elements).
 
 ![/resources/memory-usage.png](/resources/memory-usage.png)
 
+> See the [bin/memory-usage.php](bin/memory-usage.php) for details on how the
+> this RAM consumption was calculated.
+
 ## Installation
 
 This library is available as Composer repository and can be 
