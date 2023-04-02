@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Serafim\PackedArray\Tests;
 
+use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Serafim\PackedArray\Endianness;
@@ -34,8 +35,7 @@ final class ReadWriteTestCase extends TestCase
     #[DataProvider('arraysDataProvider')]
     public function testOffsetUnderflow(TypedArray $array): void
     {
-        // Enable assertions
-        \assert_options(\ASSERT_ACTIVE, true);
+        $this->skipIfAssertionDisabled();
 
         $this->expectException(OffsetRangeException::class);
         $this->expectExceptionCode(OffsetRangeException::CODE_UNDERFLOW);
@@ -48,8 +48,7 @@ final class ReadWriteTestCase extends TestCase
     #[DataProvider('arraysDataProvider')]
     public function testOffsetOverflow(TypedArray $array): void
     {
-        // Enable assertions
-        \assert_options(\ASSERT_ACTIVE, true);
+        $this->skipIfAssertionDisabled();
 
         $this->expectException(OffsetRangeException::class);
         $this->expectExceptionCode(OffsetRangeException::CODE_OVERFLOW);
@@ -62,8 +61,7 @@ final class ReadWriteTestCase extends TestCase
     #[DataProvider('arraysDataProvider')]
     public function testInvalidOffsetType(TypedArray $array): void
     {
-        // Enable assertions
-        \assert_options(\ASSERT_ACTIVE, true);
+        $this->skipIfAssertionDisabled();
 
         $this->expectException(OffsetTypeException::class);
         $this->expectExceptionCode(OffsetTypeException::CODE_INVALID_TYPE);
@@ -111,8 +109,7 @@ final class ReadWriteTestCase extends TestCase
     #[DataProvider('arraysDataProvider')]
     public function testMinBoundOverflow(TypedArray $array): void
     {
-        // Enable assertions
-        \assert_options(\ASSERT_ACTIVE, true);
+        $this->skipIfAssertionDisabled();
 
         $this->expectException(ValueRangeException::class);
         $this->expectExceptionMessage('Can not assign value');
@@ -124,8 +121,7 @@ final class ReadWriteTestCase extends TestCase
     #[DataProvider('arraysDataProvider')]
     public function testMaxBoundOverflow(TypedArray $array): void
     {
-        // Enable assertions
-        \assert_options(\ASSERT_ACTIVE, true);
+        $this->skipIfAssertionDisabled();
 
         $this->expectException(ValueRangeException::class);
         $this->expectExceptionMessage('Can not assign value');
