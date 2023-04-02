@@ -49,7 +49,7 @@
         "psalm:fix": "psalm --alter --no-cache",
         "phpcs": "php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes --dry-run",
         "phpcs:fix": "php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
-        "phpunit": "phpunit --testdox --verbose"
+        "phpunit": "phpunit --testdox"
     },
     "extra": {
         "branch-alias": {
