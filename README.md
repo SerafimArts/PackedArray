@@ -46,16 +46,16 @@ and writing.
 +---------------------+--------+-----+----------+---------+--------+
 | subject             | revs   | its | mem_peak | mode    | rstdev |
 +---------------------+--------+-----+----------+---------+--------+
-| benchNative         | 100000 | 10  | 1.291mb  | 0.014μs | ±1.50% |
-| benchSplFixedArray  | 100000 | 10  | 1.291mb  | 0.023μs | ±0.75% |
-| benchPackedInt8     | 100000 | 10  | 1.291mb  | 0.076μs | ±1.79% |
-| benchPackedUInt8    | 100000 | 10  | 1.291mb  | 0.071μs | ±0.57% |
-| benchPackedInt16    | 100000 | 10  | 1.291mb  | 0.088μs | ±2.07% |
-| benchPackedUInt16le | 100000 | 10  | 1.291mb  | 0.096μs | ±2.83% |
-| benchPackedUInt16be | 100000 | 10  | 1.291mb  | 0.097μs | ±1.65% |
-| benchPackedInt32    | 100000 | 10  | 1.291mb  | 0.150μs | ±2.18% |
-| benchPackedUInt32le | 100000 | 10  | 1.291mb  | 0.166μs | ±1.73% |
-| benchPackedUInt32be | 100000 | 10  | 1.291mb  | 0.164μs | ±0.51% |
+| benchNative         | 100000 | 10  | 1.291mb  | 0.014μs | ±0.73% |
+| benchSplFixedArray  | 100000 | 10  | 1.291mb  | 0.023μs | ±4.28% |
+| benchPackedInt8     | 100000 | 10  | 1.291mb  | 0.075μs | ±2.57% |
+| benchPackedUInt8    | 100000 | 10  | 1.291mb  | 0.070μs | ±1.80% |
+| benchPackedInt16    | 100000 | 10  | 1.291mb  | 0.090μs | ±1.91% |
+| benchPackedUInt16le | 100000 | 10  | 1.291mb  | 0.096μs | ±1.82% |
+| benchPackedUInt16be | 100000 | 10  | 1.291mb  | 0.096μs | ±9.35% |
+| benchPackedInt32    | 100000 | 10  | 1.291mb  | 0.150μs | ±1.89% |
+| benchPackedUInt32le | 100000 | 10  | 1.291mb  | 0.166μs | ±0.73% |
+| benchPackedUInt32be | 100000 | 10  | 1.291mb  | 0.163μs | ±0.86% |
 +---------------------+--------+-----+----------+---------+--------+
 ```
 
@@ -65,16 +65,16 @@ and writing.
 +---------------------+--------+-----+----------+---------+--------+
 | subject             | revs   | its | mem_peak | mode    | rstdev |
 +---------------------+--------+-----+----------+---------+--------+
-| benchNative         | 100000 | 10  | 1.291mb  | 0.014μs | ±3.53% |
-| benchSplFixedArray  | 100000 | 10  | 1.291mb  | 0.027μs | ±1.37% |
-| benchPackedInt8     | 100000 | 10  | 1.291mb  | 0.081μs | ±0.23% |
-| benchPackedUInt8    | 100000 | 10  | 1.291mb  | 0.080μs | ±0.76% |
-| benchPackedInt16    | 100000 | 10  | 1.291mb  | 0.097μs | ±0.45% |
-| benchPackedUInt16le | 100000 | 10  | 1.291mb  | 0.109μs | ±1.20% |
-| benchPackedUInt16be | 100000 | 10  | 1.291mb  | 0.107μs | ±1.21% |
-| benchPackedInt32    | 100000 | 10  | 1.291mb  | 0.029μs | ±3.62% |
-| benchPackedUInt32le | 100000 | 10  | 1.291mb  | 0.027μs | ±2.47% |
-| benchPackedUInt32be | 100000 | 10  | 1.291mb  | 0.027μs | ±0.90% |
+| benchNative         | 100000 | 10  | 1.291mb  | 0.014μs | ±0.60% |
+| benchSplFixedArray  | 100000 | 10  | 1.291mb  | 0.027μs | ±1.79% |
+| benchPackedInt8     | 100000 | 10  | 1.291mb  | 0.080μs | ±0.37% |
+| benchPackedUInt8    | 100000 | 10  | 1.291mb  | 0.080μs | ±0.57% |
+| benchPackedInt16    | 100000 | 10  | 1.291mb  | 0.097μs | ±0.26% |
+| benchPackedUInt16le | 100000 | 10  | 1.291mb  | 0.109μs | ±2.05% |
+| benchPackedUInt16be | 100000 | 10  | 1.291mb  | 0.108μs | ±2.66% |
+| benchPackedInt32    | 100000 | 10  | 1.291mb  | 0.132μs | ±0.35% |
+| benchPackedUInt32le | 100000 | 10  | 1.291mb  | 0.144μs | ±1.93% |
+| benchPackedUInt32be | 100000 | 10  | 1.291mb  | 0.144μs | ±3.23% |
 +---------------------+--------+-----+----------+---------+--------+
 ```
 

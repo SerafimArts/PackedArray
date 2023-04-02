@@ -28,6 +28,9 @@ final class ArrayWriteBench
     private readonly TypedArrayInterface $int16;
     private readonly TypedArrayInterface $uint16le;
     private readonly TypedArrayInterface $uint16be;
+    private readonly TypedArrayInterface $int32;
+    private readonly TypedArrayInterface $uint32le;
+    private readonly TypedArrayInterface $uint32be;
 
     public function prepare(): void
     {
@@ -39,6 +42,9 @@ final class ArrayWriteBench
         $this->int16 = Int16Array::new(2);
         $this->uint16le = UInt16Array::new(2, Endianness::LITTLE);
         $this->uint16be = UInt16Array::new(2, Endianness::BIG);
+        $this->int32 = Int32Array::new(2);
+        $this->uint32le = UInt32Array::new(2, Endianness::LITTLE);
+        $this->uint32be = UInt32Array::new(2, Endianness::BIG);
     }
 
     public function benchNative(): void
