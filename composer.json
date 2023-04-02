@@ -1,0 +1,65 @@
+{
+    "name": "serafim/packed-array",
+    "type": "library",
+    "description": "Typed arrays with reduced memory consumption",
+    "keywords": ["library", "array", "packed", "memory", "optimized"],
+    "homepage": "https://github.com/SerafimArts/PackedArray",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/SerafimArts/PackedArray/issues",
+        "source": "https://github.com/SerafimArts/PackedArray"
+    },
+    "authors": [
+        {
+            "name": "Kirill Nesmeyanov",
+            "email": "nesk@xakep.ru"
+        }
+    ],
+    "require": {
+        "php": "^8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Serafim\\PackedArray\\": "src"
+        }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.15",
+        "twig/twig": "^3.5",
+        "phpbench/phpbench": "^1.2",
+        "phpunit/phpunit": "^10.0.14",
+        "symfony/var-dumper": "^6.2",
+        "vimeo/psalm": "^5.8"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Serafim\\PackedArray\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": [
+            "@phpcs",
+            "@phpunit",
+            "@psalm"
+        ],
+        "generate": "@php bin/generate.php",
+        "bench": "phpbench run --report=grouped",
+        "bench:memory": "@php bin/memory-usage.php",
+        "psalm": "psalm --no-cache",
+        "psalm:fix": "psalm --alter --no-cache",
+        "phpcs": "php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes --dry-run",
+        "phpcs:fix": "php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
+        "phpunit": "phpunit --testdox --verbose"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev",
+            "dev-main": "1.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
