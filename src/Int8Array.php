@@ -11,6 +11,8 @@ use Serafim\PackedArray\Exception\ValueRangeException;
 use Serafim\PackedArray\Exception\ValueTypeException;
 
 /**
+ * @generated Please note that this class has been generated.
+ *
  * @template-extends TypedArray<int<-128, 127>>
  */
 final class Int8Array extends TypedArray

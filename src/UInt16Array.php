@@ -11,6 +11,8 @@ use Serafim\PackedArray\Exception\ValueRangeException;
 use Serafim\PackedArray\Exception\ValueTypeException;
 
 /**
+ * @generated Please note that this class has been generated.
+ *
  * @template-extends TypedArray<int<0, 65535>>
  */
 final class UInt16Array extends TypedArray
