@@ -55,6 +55,9 @@ final class UInt8Array extends TypedArray
         return self::fromBytes(\str_repeat("\0", $size * self::ELEMENT_BYTES));
     }
 
+    /**
+     * @param int<0, max> $offset
+     */
     public function offsetExists(mixed $offset): bool
     {
         assert(\is_int($offset), OffsetTypeException::fromInvalidType((string)$this, $offset));
@@ -62,6 +65,15 @@ final class UInt8Array extends TypedArray
         return $offset >= 0 && $offset < $this->length;
     }
 
+    /**
+     * @param int<0, max> $offset
+     *
+     * @return int<0, 255>
+     *
+     * @psalm-suppress MoreSpecificReturnType : The type in the docblock is more
+     *                 restrictive than the type specified in the return type.
+     * @psalm-suppress LessSpecificReturnStatement : Same to "MoreSpecificReturnType"
+     */
     public function offsetGet(mixed $offset): int
     {
         assert(\is_int($offset), OffsetTypeException::fromInvalidType((string)$this, $offset));
@@ -71,6 +83,10 @@ final class UInt8Array extends TypedArray
         return \ord($this->data[$offset]);
     }
 
+    /**
+     * @param int<0, max> $offset
+     * @param int<0, 255> $value
+     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         assert(\is_int($offset), OffsetTypeException::fromInvalidType((string)$this, $offset));
@@ -84,6 +100,9 @@ final class UInt8Array extends TypedArray
         $this->data[$offset] = \chr($value);
     }
 
+    /**
+     * @param int<0, max> $offset
+     */
     public function offsetUnset(mixed $offset): void
     {
         assert(\is_int($offset), OffsetTypeException::fromInvalidType((string)$this, $offset));
@@ -94,6 +113,13 @@ final class UInt8Array extends TypedArray
         $this->data[$offset] = \chr($value);
     }
 
+    /**
+     * @return \Traversable<int<0, max>, int<0, 255>>
+     *
+     * @psalm-suppress MoreSpecificReturnType : The type in the docblock is more
+     *                 restrictive than the type specified in method's body.
+     * @psalm-suppress LessSpecificReturnStatement : Same to "MoreSpecificReturnType"
+     */
     public function getIterator(): \Traversable
     {
         for ($offset = 0; $offset < $this->bytes; ++$offset) {

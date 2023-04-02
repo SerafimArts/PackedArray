@@ -10,32 +10,35 @@ namespace Serafim\PackedArray\Exception;
  */
 final class Printer
 {
+    /**
+     * @return non-empty-string
+     */
     public static function type(mixed $value): string
     {
         return \get_debug_type($value);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function value(mixed $value): string
     {
-        $type = self::type($value);
+        $result = self::type($value);
 
-        if (\is_scalar($value)) {
-            $scalar = match (true) {
-                \is_int($value) => self::formatInt($value),
-                \is_float($value) => self::formatFloat($value),
-                \is_string($value) => self::formatString($value),
-                \is_bool($value) => self::formatBool($value),
-                default => '<unknown>',
-            };
+        $suffix = match (true) {
+            \is_int($value) => self::formatInt($value),
+            \is_float($value) => self::formatFloat($value),
+            \is_string($value) => self::formatString($value),
+            \is_bool($value) => self::formatBool($value),
+            \is_resource($value) => \get_resource_type($value),
+            default => null,
+        };
 
-            return $type . '(' . $scalar . ')';
+        if ($suffix !== null) {
+            $result .= '(' . $suffix . ')';
         }
 
-        if (\is_resource($value)) {
-            return $type . '(' . \get_resource_type($value) . ')';
-        }
-
-        return $type;
+        return $result;
     }
 
     /**
@@ -60,6 +63,8 @@ final class Printer
 
     /**
      * @return non-empty-string
+     * @psalm-suppress MoreSpecificReturnType : The number_format always return non-empty-string
+     * @psalm-suppress LessSpecificReturnStatement : The number_format always return non-empty-string
      */
     private static function formatFloat(float $value): string
     {
@@ -68,6 +73,8 @@ final class Printer
 
     /**
      * @return non-empty-string
+     * @psalm-suppress MoreSpecificReturnType : The number_format always return non-empty-string
+     * @psalm-suppress LessSpecificReturnStatement : The number_format always return non-empty-string
      */
     private static function formatInt(int $value): string
     {
