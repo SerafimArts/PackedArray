@@ -131,8 +131,8 @@ final class {{ sample.class }} extends TypedArray
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
         assert(\is_{{ sample.type }}($value), ValueTypeException::fromInvalidType((string)$this, $value));
-        assert($value >= {{ sample.from }}, ValueRangeException::fromUnderflow((string)$this, $value));
-        assert($value <= {{ sample.to }}, ValueRangeException::fromOverflow((string)$this, $value));
+        assert($value >= self::ELEMENT_MIN_VALUE, ValueRangeException::fromUnderflow((string)$this, $value));
+        assert($value <= self::ELEMENT_MAX_VALUE, ValueRangeException::fromOverflow((string)$this, $value));
 
         {{ sample.pack | raw }}
     }
