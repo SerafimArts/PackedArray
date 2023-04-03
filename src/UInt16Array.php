@@ -106,8 +106,8 @@ final class UInt16Array extends TypedArray
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
         assert(\is_int($value), ValueTypeException::fromInvalidType((string)$this, $value));
-        assert($value >= 0, ValueRangeException::fromUnderflow((string)$this, $value));
-        assert($value <= 65535, ValueRangeException::fromOverflow((string)$this, $value));
+        assert($value >= self::ELEMENT_MIN_VALUE, ValueRangeException::fromUnderflow((string)$this, $value));
+        assert($value <= self::ELEMENT_MAX_VALUE, ValueRangeException::fromOverflow((string)$this, $value));
 
         if ($this->endianness === Endianness::LITTLE) {
             $this->data[$offset] = \chr($value);

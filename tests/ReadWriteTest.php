@@ -11,11 +11,13 @@ use Serafim\PackedArray\Exception\OffsetRangeException;
 use Serafim\PackedArray\Exception\OffsetTypeException;
 use Serafim\PackedArray\Exception\ValueRangeException;
 use Serafim\PackedArray\Int16Array;
+use Serafim\PackedArray\Int24Array;
 use Serafim\PackedArray\Int32Array;
 use Serafim\PackedArray\Int64Array;
 use Serafim\PackedArray\Int8Array;
 use Serafim\PackedArray\TypedArray;
 use Serafim\PackedArray\UInt16Array;
+use Serafim\PackedArray\UInt24Array;
 use Serafim\PackedArray\UInt32Array;
 use Serafim\PackedArray\UInt8Array;
 
@@ -32,6 +34,11 @@ final class ReadWriteTest extends TestCase
             UInt16Array::class        => [UInt16Array::new(1)],
             UInt16Array::class . 'BE' => [UInt16Array::new(1, Endianness::BIG)],
             UInt16Array::class . 'LE' => [UInt16Array::new(1, Endianness::LITTLE)],
+
+            Int24Array::class         => [Int24Array::new(1)],
+            UInt24Array::class        => [UInt24Array::new(1)],
+            UInt24Array::class . 'BE' => [UInt24Array::new(1, Endianness::BIG)],
+            UInt24Array::class . 'LE' => [UInt24Array::new(1, Endianness::LITTLE)],
 
             Int32Array::class         => [Int32Array::new(1)],
             UInt32Array::class        => [UInt32Array::new(1)],

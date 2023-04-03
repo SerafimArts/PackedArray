@@ -13,46 +13,56 @@ use Serafim\PackedArray\Exception\ValueTypeException;
 /**
  * @generated Please note that this class has been generated.
  *
- * @template-extends TypedArray<int<-128, 127>>
+ * @template-extends TypedArray<int<0, 16777215>>
  */
-final class Int8Array extends TypedArray
+final class UInt24Array extends TypedArray
 {
     /**
      * The constant represents the size in bytes of each element in a typed array.
      *
      * @var int<1, max>
      */
-    public const ELEMENT_BYTES = 1;
+    public const ELEMENT_BYTES = 3;
 
     /**
      * The minimal available value of the element.
      *
-     * @var int<-128, 127>
+     * @var int<0, 16777215>
      */
-    public const ELEMENT_MIN_VALUE = -128;
+    public const ELEMENT_MIN_VALUE = 0;
 
     /**
      * The maximal available value of the element.
      *
-     * @var int<-128, 127>
+     * @var int<0, 16777215>
      */
-    public const ELEMENT_MAX_VALUE = 127;
+    public const ELEMENT_MAX_VALUE = 16777215;
 
-    public function __construct(string $bytes)
-    {
+    public readonly Endianness $endianness;
+
+    public function __construct(
+        string $bytes,
+        Endianness $endianness = null,
+    ) {
+        $this->endianness = $endianness ?? Endianness::auto();
+
         parent::__construct($bytes, self::ELEMENT_BYTES);
     }
 
-    public static function fromBytes(string $bytes): self
-    {
-        return new self($bytes);
+    public static function fromBytes(
+        string $bytes,
+        Endianness $endianness = null,
+    ): self {
+        return new self($bytes, $endianness);
     }
 
-    public static function new(int $size): self
-    {
-        assert($size >= 0, ArraySizeException::fromUnderflow('Int8Array', $size));
+    public static function new(
+        int $size,
+        Endianness $endianness = null,
+    ): self {
+        assert($size >= 0, ArraySizeException::fromUnderflow('UInt24Array', $size));
 
-        return self::fromBytes(\str_repeat("\0", $size * self::ELEMENT_BYTES));
+        return self::fromBytes(\str_repeat("\0", $size * self::ELEMENT_BYTES), $endianness);
     }
 
     /**
@@ -68,7 +78,7 @@ final class Int8Array extends TypedArray
     /**
      * @param int<0, max> $offset
      *
-     * @return int<-128, 127>
+     * @return int<0, 16777215>
      *
      * @psalm-suppress MoreSpecificReturnType : The type in the docblock is more
      *                 restrictive than the type specified in the return type.
@@ -80,12 +90,20 @@ final class Int8Array extends TypedArray
         assert($offset >= 0, OffsetRangeException::fromUnderflow((string)$this, $offset));
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
-        return ($value = \ord($this->data[$offset])) & 0x80 ? $value - 0x100 : $value;
+        return $this->endianness === Endianness::LITTLE
+                ? (\ord($this->data[$offset])
+                  | \ord($this->data[$offset + 1]) << 8
+                  | \ord($this->data[$offset + 2]) << 16
+                  )
+                : (\ord($this->data[$offset + 2])
+                  | \ord($this->data[$offset + 1]) << 8
+                  | \ord($this->data[$offset]) << 16
+                  );
     }
 
     /**
      * @param int<0, max> $offset
-     * @param int<-128, 127> $value
+     * @param int<0, 16777215> $value
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
@@ -97,7 +115,15 @@ final class Int8Array extends TypedArray
         assert($value >= self::ELEMENT_MIN_VALUE, ValueRangeException::fromUnderflow((string)$this, $value));
         assert($value <= self::ELEMENT_MAX_VALUE, ValueRangeException::fromOverflow((string)$this, $value));
 
-        $this->data[$offset] = \chr($value);
+        if ($this->endianness === Endianness::LITTLE) {
+            $this->data[$offset] = \chr($value);
+            $this->data[$offset + 1] = \chr($value >> 8);
+            $this->data[$offset + 2] = \chr($value >> 16);
+        } else {
+            $this->data[$offset] = \chr($value >> 16);
+            $this->data[$offset + 1] = \chr($value >> 8);
+            $this->data[$offset + 2] = \chr($value);
+        }
     }
 
     /**
@@ -110,11 +136,19 @@ final class Int8Array extends TypedArray
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
         $value = 0;
-        $this->data[$offset] = \chr($value);
+        if ($this->endianness === Endianness::LITTLE) {
+            $this->data[$offset] = \chr($value);
+            $this->data[$offset + 1] = \chr($value >> 8);
+            $this->data[$offset + 2] = \chr($value >> 16);
+        } else {
+            $this->data[$offset] = \chr($value >> 16);
+            $this->data[$offset + 1] = \chr($value >> 8);
+            $this->data[$offset + 2] = \chr($value);
+        }
     }
 
     /**
-     * @return \Traversable<int<0, max>, int<-128, 127>>
+     * @return \Traversable<int<0, max>, int<0, 16777215>>
      *
      * @psalm-suppress MoreSpecificReturnType : The type in the docblock is more
      *                 restrictive than the type specified in method's body.
@@ -122,8 +156,16 @@ final class Int8Array extends TypedArray
      */
     public function getIterator(): \Traversable
     {
-        for ($offset = 0; $offset < $this->bytes; ++$offset) {
-            yield $offset => ($value = \ord($this->data[$offset])) & 0x80 ? $value - 0x100 : $value;
+        for ($offset = 0; $offset < $this->bytes; $offset += 3) {
+            yield $offset => $this->endianness === Endianness::LITTLE
+                ? (\ord($this->data[$offset])
+                  | \ord($this->data[$offset + 1]) << 8
+                  | \ord($this->data[$offset + 2]) << 16
+                  )
+                : (\ord($this->data[$offset + 2])
+                  | \ord($this->data[$offset + 1]) << 8
+                  | \ord($this->data[$offset]) << 16
+                  );
         }
     }
 }

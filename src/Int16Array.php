@@ -81,8 +81,8 @@ final class Int16Array extends TypedArray
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
         return ($lo = \ord($this->data[$offset + 1])) & 0x80
-                ? (\ord($this->data[$offset]) | $lo << 8) - 0x10000
-                : \ord($this->data[$offset]) | $lo << 8;
+                ? (\ord($this->data[$offset]) | $lo << 8) - 0x0001_0000
+                : (\ord($this->data[$offset]) | $lo << 8);
     }
 
     /**
@@ -96,8 +96,8 @@ final class Int16Array extends TypedArray
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
         assert(\is_int($value), ValueTypeException::fromInvalidType((string)$this, $value));
-        assert($value >= -32768, ValueRangeException::fromUnderflow((string)$this, $value));
-        assert($value <= 32767, ValueRangeException::fromOverflow((string)$this, $value));
+        assert($value >= self::ELEMENT_MIN_VALUE, ValueRangeException::fromUnderflow((string)$this, $value));
+        assert($value <= self::ELEMENT_MAX_VALUE, ValueRangeException::fromOverflow((string)$this, $value));
 
         $this->data[$offset] = \chr($value);
         $this->data[$offset + 1] = \chr($value >> 8);
@@ -128,8 +128,8 @@ final class Int16Array extends TypedArray
     {
         for ($offset = 0; $offset < $this->bytes; $offset += 2) {
             yield $offset => ($lo = \ord($this->data[$offset + 1])) & 0x80
-                ? (\ord($this->data[$offset]) | $lo << 8) - 0x10000
-                : \ord($this->data[$offset]) | $lo << 8;
+                ? (\ord($this->data[$offset]) | $lo << 8) - 0x0001_0000
+                : (\ord($this->data[$offset]) | $lo << 8);
         }
     }
 }

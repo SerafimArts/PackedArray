@@ -48,8 +48,8 @@ $samples = [
         bytesPerElement: 2,
         unpack: <<<'PHP'
             ($lo = \ord($this->data[$offset + 1])) & 0x80
-                ? (\ord($this->data[$offset]) | $lo << 8) - 0x10000
-                : \ord($this->data[$offset]) | $lo << 8;
+                ? (\ord($this->data[$offset]) | $lo << 8) - 0x0001_0000
+                : (\ord($this->data[$offset]) | $lo << 8);
             PHP,
         pack: <<<'PHP'
             $this->data[$offset] = \chr($value);
@@ -75,6 +75,61 @@ $samples = [
             } else {
                 $this->data[$offset] = \chr($value >> 8);
                 $this->data[$offset + 1] = \chr($value);
+            }
+            PHP,
+        endianness: true,
+    ),
+    new Sample(
+        class: 'Int24Array',
+        type: 'int',
+        default: '0',
+        from: -8388608,
+        to: 8388607,
+        bytesPerElement: 3,
+        unpack: <<<'PHP'
+            ($lo = \ord($this->data[$offset + 2])) & 0x80
+                ? (\ord($this->data[$offset])
+                  | \ord($this->data[$offset + 1]) << 8
+                  | $lo << 16
+                  ) - 0x0100_0000
+                : (\ord($this->data[$offset])
+                  | \ord($this->data[$offset + 1]) << 8
+                  | $lo << 16
+                  );
+            PHP,
+        pack: <<<'PHP'
+            $this->data[$offset] = \chr($value);
+            $this->data[$offset + 1] = \chr($value >> 8);
+            $this->data[$offset + 2] = \chr($value >> 16);
+            PHP,
+    ),
+    new Sample(
+        class: 'UInt24Array',
+        type: 'int',
+        default: '0',
+        from: 0,
+        to: 16777215,
+        bytesPerElement: 3,
+        unpack: <<<'PHP'
+            $this->endianness === Endianness::LITTLE
+                ? (\ord($this->data[$offset])
+                  | \ord($this->data[$offset + 1]) << 8
+                  | \ord($this->data[$offset + 2]) << 16
+                  )
+                : (\ord($this->data[$offset + 2])
+                  | \ord($this->data[$offset + 1]) << 8
+                  | \ord($this->data[$offset]) << 16
+                  );
+            PHP,
+        pack: <<<'PHP'
+            if ($this->endianness === Endianness::LITTLE) {
+                $this->data[$offset] = \chr($value);
+                $this->data[$offset + 1] = \chr($value >> 8);
+                $this->data[$offset + 2] = \chr($value >> 16);
+            } else {
+                $this->data[$offset] = \chr($value >> 16);
+                $this->data[$offset + 1] = \chr($value >> 8);
+                $this->data[$offset + 2] = \chr($value);
             }
             PHP,
         endianness: true,

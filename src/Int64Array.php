@@ -98,8 +98,8 @@ final class Int64Array extends TypedArray
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
         assert(\is_int($value), ValueTypeException::fromInvalidType((string)$this, $value));
-        assert($value >= -9223372036854775807-1, ValueRangeException::fromUnderflow((string)$this, $value));
-        assert($value <= 9223372036854775807, ValueRangeException::fromOverflow((string)$this, $value));
+        assert($value >= self::ELEMENT_MIN_VALUE, ValueRangeException::fromUnderflow((string)$this, $value));
+        assert($value <= self::ELEMENT_MAX_VALUE, ValueRangeException::fromOverflow((string)$this, $value));
 
         $this->data[$offset] = \chr($value);
         $this->data[$offset + 1] = \chr($value >> 8);
