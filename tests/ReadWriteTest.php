@@ -10,6 +10,8 @@ use Serafim\PackedArray\Endianness;
 use Serafim\PackedArray\Exception\OffsetRangeException;
 use Serafim\PackedArray\Exception\OffsetTypeException;
 use Serafim\PackedArray\Exception\ValueRangeException;
+use Serafim\PackedArray\Float32Array;
+use Serafim\PackedArray\Float64Array;
 use Serafim\PackedArray\Int16Array;
 use Serafim\PackedArray\Int24Array;
 use Serafim\PackedArray\Int32Array;
@@ -17,6 +19,7 @@ use Serafim\PackedArray\Int40Array;
 use Serafim\PackedArray\Int48Array;
 use Serafim\PackedArray\Int64Array;
 use Serafim\PackedArray\Int8Array;
+use Serafim\PackedArray\IntArrayInterface;
 use Serafim\PackedArray\TypedArray;
 use Serafim\PackedArray\UInt16Array;
 use Serafim\PackedArray\UInt24Array;
@@ -48,6 +51,14 @@ final class ReadWriteTest extends TestCase
             UInt32Array::class        => [UInt32Array::new(1)],
             UInt32Array::class . 'BE' => [UInt32Array::new(1, Endianness::BIG)],
             UInt32Array::class . 'LE' => [UInt32Array::new(1, Endianness::LITTLE)],
+
+            Float32Array::class        => [Float32Array::new(1)],
+            Float32Array::class . 'BE' => [Float32Array::new(1, Endianness::BIG)],
+            Float32Array::class . 'LE' => [Float32Array::new(1, Endianness::LITTLE)],
+
+            Float64Array::class        => [Float64Array::new(1)],
+            Float64Array::class . 'BE' => [Float64Array::new(1, Endianness::BIG)],
+            Float64Array::class . 'LE' => [Float64Array::new(1, Endianness::LITTLE)],
         ];
 
         if (\PHP_INT_SIZE >= 8) {
@@ -111,7 +122,7 @@ final class ReadWriteTest extends TestCase
     {
         $array = clone $array;
 
-        $array[0] = (int)$array::ELEMENT_MIN_VALUE;
+        $array[0] = $array::ELEMENT_MIN_VALUE;
         $this->assertSame($array[0], $array::ELEMENT_MIN_VALUE);
     }
 
@@ -127,17 +138,13 @@ final class ReadWriteTest extends TestCase
     #[DataProvider('arraysDataProvider')]
     public function testRandomValue(TypedArray $array): void
     {
+        if (!$array instanceof IntArrayInterface) {
+            $this->markTestSkipped('This test is only available for int arrays');
+        }
+
         $array = clone $array;
 
-        $value = match(true) {
-            \is_int($array[0]) => \random_int($array::ELEMENT_MIN_VALUE, $array::ELEMENT_MAX_VALUE),
-            \is_float($array[0]) => \random_int(
-                (int)($array::ELEMENT_MIN_VALUE * 1000),
-                (int)($array::ELEMENT_MAX_VALUE * 1000),
-            ) / 1000
-        };
-
-        $array[0] = $value;
+        $array[0] = $value = \random_int($array::ELEMENT_MIN_VALUE, $array::ELEMENT_MAX_VALUE);
         $this->assertSame($array[0], $value);
     }
 
@@ -145,6 +152,10 @@ final class ReadWriteTest extends TestCase
     public function testMinBoundOverflow(TypedArray $array): void
     {
         $this->skipIfAssertionDisabled();
+
+        if (!$array instanceof IntArrayInterface) {
+            $this->markTestSkipped('This test is only available for int arrays');
+        }
 
         if ($array::ELEMENT_MIN_VALUE === \PHP_INT_MIN) {
             $this->markTestSkipped('Exactly the same error as in the case of passing an incorrect type');
@@ -161,6 +172,10 @@ final class ReadWriteTest extends TestCase
     public function testMaxBoundOverflow(TypedArray $array): void
     {
         $this->skipIfAssertionDisabled();
+
+        if (!$array instanceof IntArrayInterface) {
+            $this->markTestSkipped('This test is only available for int arrays');
+        }
 
         if ($array::ELEMENT_MAX_VALUE === \PHP_INT_MAX) {
             $this->markTestSkipped('Exactly the same error as in the case of passing an incorrect type');

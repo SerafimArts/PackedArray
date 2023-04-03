@@ -14,8 +14,9 @@ use Serafim\PackedArray\Exception\ValueTypeException;
  * @generated Please note that this class has been generated.
  *
  * @template-extends TypedArray<int<0, 1099511627775>>
+ * @template-implements IntArrayInterface<int<0, 1099511627775>>
  */
-final class UInt40Array extends TypedArray
+final class UInt40Array extends TypedArray implements IntArrayInterface
 {
     /**
      * The constant represents the size in bytes of each element in a typed array.

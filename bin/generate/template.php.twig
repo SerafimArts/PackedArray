@@ -14,8 +14,9 @@ use Serafim\PackedArray\Exception\ValueTypeException;
  * @generated Please note that this class has been generated.
  *
  * @template-extends TypedArray<{{ sample.type }}<{{ sample.fromDocBlock }}, {{ sample.toDocBlock }}>>
+ * @template-implements {{ sample.implements | raw }}<{{ sample.type }}<{{ sample.fromDocBlock }}, {{ sample.toDocBlock }}>>
  */
-final class {{ sample.class }} extends TypedArray
+final class {{ sample.class }} extends TypedArray implements {{ sample.implements | raw }}
 {
     /**
      * The constant represents the size in bytes of each element in a typed array.

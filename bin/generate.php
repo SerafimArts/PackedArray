@@ -11,7 +11,7 @@ require __DIR__ . '/generate/Sample.php';
 $twig = new Environment(new FilesystemLoader(__DIR__ . '/generate'));
 
 $samples = [
-    // x8
+    // i8
     new Sample(
         class: 'Int8Array',
         type: 'int',
@@ -40,7 +40,7 @@ $samples = [
             $this->data[$offset] = \chr($value);
             PHP,
     ),
-    // x16
+    // i16
     new Sample(
         class: 'Int16Array',
         type: 'int',
@@ -81,7 +81,7 @@ $samples = [
             PHP,
         endianness: true,
     ),
-    // x24
+    // i24
     new Sample(
         class: 'Int24Array',
         type: 'int',
@@ -137,7 +137,7 @@ $samples = [
             PHP,
         endianness: true,
     ),
-    // x32
+    // i32
     new Sample(
         class: 'Int32Array',
         type: 'int',
@@ -182,7 +182,7 @@ $samples = [
             PHP,
         endianness: true,
     ),
-    // x40
+    // i40
     new Sample(
         class: 'Int40Array',
         type: 'int',
@@ -263,7 +263,7 @@ $samples = [
             }
             PHP,
     ),
-    // x48
+    // i48
     new Sample(
         class: 'Int48Array',
         type: 'int',
@@ -351,7 +351,7 @@ $samples = [
             }
             PHP,
     ),
-    // x64
+    // i64
     new Sample(
         class: 'Int64Array',
         type: 'int',
@@ -380,6 +380,54 @@ $samples = [
             PHP,
         fromDocBlock: (string)\PHP_INT_MIN,
     ),
+    // f32
+    new Sample(
+        class: 'Float32Array',
+        type: 'float',
+        default: '0.0',
+        from: '-340282346638528859811704183484516925440.',
+        to: '340282346638528859811704183484516925440.',
+        bytesPerElement: 4,
+        unpack: <<<'PHP'
+            (float)(\unpack($this->endianess === Endianness::LITTLE ? 'g' : 'G', \substr($this->data, $offset, 4))[1]);
+            PHP,
+        pack: <<<'PHP'
+            $bytes = \pack($this->endianess === Endianness::LITTLE ? 'g' : 'G', $value);
+            $this->data[$offset] = $bytes[0];
+            $this->data[$offset + 1] = $bytes[1];
+            $this->data[$offset + 2] = $bytes[2];
+            $this->data[$offset + 3] = $bytes[3];
+            PHP,
+        endianness: true,
+        fromDocBlock: '1.175494351E-38',
+        toDocBlock: '3.402823466E+38',
+        implements: 'FloatArrayInterface'
+    ),
+    // f64
+    new Sample(
+        class: 'Float64Array',
+        type: 'float',
+        default: '0.0',
+        from: '2.2250738585072014E-308',
+        to: '1.7976931348623158E+308',
+        bytesPerElement: 8,
+        unpack: <<<'PHP'
+            (float)(\unpack($this->endianess === Endianness::LITTLE ? 'e' : 'E', \substr($this->data, $offset, 8))[1]);
+            PHP,
+        pack: <<<'PHP'
+            $bytes = \pack($this->endianess === Endianness::LITTLE ? 'e' : 'E', $value);
+            $this->data[$offset] = $bytes[0];
+            $this->data[$offset + 1] = $bytes[1];
+            $this->data[$offset + 2] = $bytes[2];
+            $this->data[$offset + 3] = $bytes[3];
+            $this->data[$offset + 4] = $bytes[4];
+            $this->data[$offset + 5] = $bytes[5];
+            $this->data[$offset + 6] = $bytes[6];
+            $this->data[$offset + 7] = $bytes[7];
+            PHP,
+        endianness: true,
+        implements: 'FloatArrayInterface'
+    ),
 ];
 
 $expression = "\n            ";
@@ -398,7 +446,6 @@ foreach ($samples as $sample) {
             $sample->precondition = \implode($statement, \explode("\n", $sample->precondition));
         }
     }
-
 
     $result = $twig->render('template.php.twig', [
         'sample' => $sample

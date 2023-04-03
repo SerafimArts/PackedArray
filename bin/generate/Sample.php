@@ -26,6 +26,7 @@ class Sample
         public ?string $precondition = null,
         public ?string $fromDocBlock = null,
         public ?string $toDocBlock = null,
+        public string $implements = 'IntArrayInterface'
     ) {
         if ($this->fromDocBlock === null) {
             $this->fromDocBlock = (string)$this->from;

@@ -13,47 +13,57 @@ use Serafim\PackedArray\Exception\ValueTypeException;
 /**
  * @generated Please note that this class has been generated.
  *
- * @template-extends TypedArray<int<-8388608, 8388607>>
- * @template-implements IntArrayInterface<int<-8388608, 8388607>>
+ * @template-extends TypedArray<float<1.175494351E-38, 3.402823466E+38>>
+ * @template-implements FloatArrayInterface<float<1.175494351E-38, 3.402823466E+38>>
  */
-final class Int24Array extends TypedArray implements IntArrayInterface
+final class Float32Array extends TypedArray implements FloatArrayInterface
 {
     /**
      * The constant represents the size in bytes of each element in a typed array.
      *
      * @var int<1, max>
      */
-    public const ELEMENT_BYTES = 3;
+    public const ELEMENT_BYTES = 4;
 
     /**
      * The minimal available value of the element.
      *
-     * @var int<-8388608, 8388607>
+     * @var float<1.175494351E-38, 3.402823466E+38>
      */
-    public const ELEMENT_MIN_VALUE = -8388608;
+    public const ELEMENT_MIN_VALUE = -340282346638528859811704183484516925440.;
 
     /**
      * The maximal available value of the element.
      *
-     * @var int<-8388608, 8388607>
+     * @var float<1.175494351E-38, 3.402823466E+38>
      */
-    public const ELEMENT_MAX_VALUE = 8388607;
+    public const ELEMENT_MAX_VALUE = 340282346638528859811704183484516925440.;
 
-    public function __construct(string $bytes)
-    {
+    public readonly Endianness $endianness;
+
+    public function __construct(
+        string $bytes,
+        Endianness $endianness = null,
+    ) {
+        $this->endianness = $endianness ?? Endianness::auto();
+
         parent::__construct($bytes, self::ELEMENT_BYTES);
     }
 
-    public static function fromBytes(string $bytes): self
-    {
-        return new self($bytes);
+    public static function fromBytes(
+        string $bytes,
+        Endianness $endianness = null,
+    ): self {
+        return new self($bytes, $endianness);
     }
 
-    public static function new(int $size): self
-    {
-        assert($size >= 0, ArraySizeException::fromUnderflow('Int24Array', $size));
+    public static function new(
+        int $size,
+        Endianness $endianness = null,
+    ): self {
+        assert($size >= 0, ArraySizeException::fromUnderflow('Float32Array', $size));
 
-        return self::fromBytes(\str_repeat("\0", $size * self::ELEMENT_BYTES));
+        return self::fromBytes(\str_repeat("\0", $size * self::ELEMENT_BYTES), $endianness);
     }
 
     /**
@@ -69,32 +79,24 @@ final class Int24Array extends TypedArray implements IntArrayInterface
     /**
      * @param int<0, max> $offset
      *
-     * @return int<-8388608, 8388607>
+     * @return float<1.175494351E-38, 3.402823466E+38>
      *
      * @psalm-suppress MoreSpecificReturnType : The type in the docblock is more
      *                 restrictive than the type specified in the return type.
      * @psalm-suppress LessSpecificReturnStatement : Same to "MoreSpecificReturnType"
      */
-    public function offsetGet(mixed $offset): int
+    public function offsetGet(mixed $offset): float
     {
         assert(\is_int($offset), OffsetTypeException::fromInvalidType((string)$this, $offset));
         assert($offset >= 0, OffsetRangeException::fromUnderflow((string)$this, $offset));
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
-        return ($lo = \ord($this->data[$offset + 2])) & 0x80
-                ? (\ord($this->data[$offset])
-                  | \ord($this->data[$offset + 1]) << 8
-                  | $lo << 16
-                  ) - 0x0100_0000
-                : (\ord($this->data[$offset])
-                  | \ord($this->data[$offset + 1]) << 8
-                  | $lo << 16
-                  );
+        return (float)(\unpack($this->endianess === Endianness::LITTLE ? 'g' : 'G', \substr($this->data, $offset, 4))[1]);
     }
 
     /**
      * @param int<0, max> $offset
-     * @param int<-8388608, 8388607> $value
+     * @param float<1.175494351E-38, 3.402823466E+38> $value
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
@@ -102,13 +104,15 @@ final class Int24Array extends TypedArray implements IntArrayInterface
         assert($offset >= 0, OffsetRangeException::fromUnderflow((string)$this, $offset));
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
-        assert(\is_int($value), ValueTypeException::fromInvalidType((string)$this, $value));
+        assert(\is_float($value), ValueTypeException::fromInvalidType((string)$this, $value));
         assert($value >= self::ELEMENT_MIN_VALUE, ValueRangeException::fromUnderflow((string)$this, $value));
         assert($value <= self::ELEMENT_MAX_VALUE, ValueRangeException::fromOverflow((string)$this, $value));
 
-        $this->data[$offset] = \chr($value);
-        $this->data[$offset + 1] = \chr($value >> 8);
-        $this->data[$offset + 2] = \chr($value >> 16);
+        $bytes = \pack($this->endianess === Endianness::LITTLE ? 'g' : 'G', $value);
+        $this->data[$offset] = $bytes[0];
+        $this->data[$offset + 1] = $bytes[1];
+        $this->data[$offset + 2] = $bytes[2];
+        $this->data[$offset + 3] = $bytes[3];
     }
 
     /**
@@ -120,14 +124,16 @@ final class Int24Array extends TypedArray implements IntArrayInterface
         assert($offset >= 0, OffsetRangeException::fromUnderflow((string)$this, $offset));
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
-        $value = 0;
-        $this->data[$offset] = \chr($value);
-        $this->data[$offset + 1] = \chr($value >> 8);
-        $this->data[$offset + 2] = \chr($value >> 16);
+        $value = 0.0;
+        $bytes = \pack($this->endianess === Endianness::LITTLE ? 'g' : 'G', $value);
+        $this->data[$offset] = $bytes[0];
+        $this->data[$offset + 1] = $bytes[1];
+        $this->data[$offset + 2] = $bytes[2];
+        $this->data[$offset + 3] = $bytes[3];
     }
 
     /**
-     * @return \Traversable<int<0, max>, int<-8388608, 8388607>>
+     * @return \Traversable<int<0, max>, float<1.175494351E-38, 3.402823466E+38>>
      *
      * @psalm-suppress MoreSpecificReturnType : The type in the docblock is more
      *                 restrictive than the type specified in method's body.
@@ -135,16 +141,8 @@ final class Int24Array extends TypedArray implements IntArrayInterface
      */
     public function getIterator(): \Traversable
     {
-        for ($offset = 0; $offset < $this->bytes; $offset += 3) {
-            yield $offset => ($lo = \ord($this->data[$offset + 2])) & 0x80
-                ? (\ord($this->data[$offset])
-                  | \ord($this->data[$offset + 1]) << 8
-                  | $lo << 16
-                  ) - 0x0100_0000
-                : (\ord($this->data[$offset])
-                  | \ord($this->data[$offset + 1]) << 8
-                  | $lo << 16
-                  );
+        for ($offset = 0; $offset < $this->bytes; $offset += 4) {
+            yield $offset => (float)(\unpack($this->endianess === Endianness::LITTLE ? 'g' : 'G', \substr($this->data, $offset, 4))[1]);
         }
     }
 }
