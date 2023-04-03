@@ -44,35 +44,36 @@ and writing.
 
 #### Reading
 
-| subject             | revs   | its | mem_peak | mode    | rstdev |
-|---------------------|--------|-----|----------|---------|--------|
-| benchNative         | 100000 | 10  | 1.291mb  | 0.014μs | ±0.51% |
-| benchSplFixedArray  | 100000 | 10  | 1.291mb  | 0.023μs | ±0.58% |
-| benchPackedInt8     | 100000 | 10  | 1.291mb  | 0.076μs | ±3.02% |
-| benchPackedUInt8    | 100000 | 10  | 1.291mb  | 0.070μs | ±0.31% |
-| benchPackedInt16    | 100000 | 10  | 1.291mb  | 0.089μs | ±2.01% |
-| benchPackedUInt16le | 100000 | 10  | 1.291mb  | 0.097μs | ±1.41% |
-| benchPackedUInt16be | 100000 | 10  | 1.291mb  | 0.096μs | ±0.77% |
-| benchPackedInt32    | 100000 | 10  | 1.291mb  | 0.150μs | ±1.40% |
-| benchPackedUInt32le | 100000 | 10  | 1.291mb  | 0.165μs | ±0.67% |
-| benchPackedUInt32be | 100000 | 10  | 1.291mb  | 0.164μs | ±2.78% |
-| benchPackedInt64    | 100000 | 10  | 1.291mb  | 0.149μs | ±0.47% |
+| subject            | revs  | its | mem_peak | mode    | rstdev  |
+|--------------------|-------|-----|----------|---------|---------|
+| benchNative        | 10000 | 5   | 1.291mb  | 0.018μs | ±1.83%  |
+| benchSplFixedArray | 10000 | 5   | 1.291mb  | 0.028μs | ±3.06%  |
+| benchPackedInt8    | 10000 | 5   | 1.291mb  | 0.087μs | ±1.37%  |
+| benchPackedUInt8   | 10000 | 5   | 1.291mb  | 0.079μs | ±1.65%  |
+| benchPackedInt16   | 10000 | 5   | 1.291mb  | 0.104μs | ±1.12%  |
+| benchPackedUInt16  | 10000 | 5   | 1.291mb  | 0.108μs | ±10.24% |
+| benchPackedInt32   | 10000 | 5   | 1.291mb  | 0.159μs | ±1.06%  |
+| benchPackedUInt32  | 10000 | 5   | 1.291mb  | 0.174μs | ±0.98%  |
+| benchPackedInt64   | 10000 | 5   | 1.291mb  | 0.160μs | ±0.55%  |
+| benchPackedFloat32 | 10000 | 5   | 1.291mb  | 1.225μs | ±1.46%  |
+| benchPackedFloat64 | 10000 | 5   | 1.291mb  | 1.232μs | ±1.33%  |
+
 
 #### Writing
 
-| subject             | revs   | its | mem_peak | mode    | rstdev |
-|---------------------|--------|-----|----------|---------|--------|
-| benchNative         | 100000 | 10  | 1.291mb  | 0.014μs | ±1.41% |
-| benchSplFixedArray  | 100000 | 10  | 1.291mb  | 0.028μs | ±1.52% |
-| benchPackedInt8     | 100000 | 10  | 1.291mb  | 0.081μs | ±1.46% |
-| benchPackedUInt8    | 100000 | 10  | 1.291mb  | 0.081μs | ±0.91% |
-| benchPackedInt16    | 100000 | 10  | 1.291mb  | 0.098μs | ±3.97% |
-| benchPackedUInt16le | 100000 | 10  | 1.291mb  | 0.109μs | ±4.03% |
-| benchPackedUInt16be | 100000 | 10  | 1.291mb  | 0.108μs | ±1.12% |
-| benchPackedInt32    | 100000 | 10  | 1.291mb  | 0.132μs | ±0.47% |
-| benchPackedUInt32le | 100000 | 10  | 1.291mb  | 0.146μs | ±2.86% |
-| benchPackedUInt32be | 100000 | 10  | 1.291mb  | 0.146μs | ±2.58% |
-| benchPackedInt64    | 100000 | 10  | 1.291mb  | 0.206μs | ±3.24% |
+| subject            | revs  | its | mem_peak | mode    | rstdev |
+|--------------------|-------|-----|----------|---------|--------|
+| benchNative        | 10000 | 5   | 1.291mb  | 0.019μs | ±2.52% |
+| benchSplFixedArray | 10000 | 5   | 1.291mb  | 0.032μs | ±2.10% |
+| benchPackedInt8    | 10000 | 5   | 1.291mb  | 0.088μs | ±2.45% |
+| benchPackedUInt8   | 10000 | 5   | 1.291mb  | 0.089μs | ±0.50% |
+| benchPackedInt16   | 10000 | 5   | 1.291mb  | 0.108μs | ±1.42% |
+| benchPackedUInt16  | 10000 | 5   | 1.291mb  | 0.121μs | ±4.27% |
+| benchPackedInt32   | 10000 | 5   | 1.291mb  | 0.146μs | ±1.49% |
+| benchPackedUInt32  | 10000 | 5   | 1.291mb  | 0.153μs | ±1.62% |
+| benchPackedInt64   | 10000 | 5   | 1.291mb  | 0.220μs | ±1.79% |
+| benchPackedFloat32 | 10000 | 5   | 1.291mb  | 1.268μs | ±0.91% |
+| benchPackedFloat64 | 10000 | 5   | 1.291mb  | 1.343μs | ±0.44% |
 
 ## Installation
 

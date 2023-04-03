@@ -9,6 +9,8 @@ use PhpBench\Attributes\Iterations;
 use PhpBench\Attributes\Revs;
 use PhpBench\Attributes\Warmup;
 use Serafim\PackedArray\Endianness;
+use Serafim\PackedArray\Float32Array;
+use Serafim\PackedArray\Float64Array;
 use Serafim\PackedArray\Int16Array;
 use Serafim\PackedArray\Int32Array;
 use Serafim\PackedArray\Int64Array;
@@ -18,7 +20,7 @@ use Serafim\PackedArray\UInt16Array;
 use Serafim\PackedArray\UInt32Array;
 use Serafim\PackedArray\UInt8Array;
 
-#[Revs(100_000), Warmup(2), Iterations(10)]
+#[Revs(10_000), Warmup(2), Iterations(5)]
 #[BeforeMethods('prepare')]
 final class ArrayWriteBench
 {
@@ -27,12 +29,12 @@ final class ArrayWriteBench
     private readonly TypedArrayInterface $int8;
     private readonly TypedArrayInterface $uint8;
     private readonly TypedArrayInterface $int16;
-    private readonly TypedArrayInterface $uint16le;
-    private readonly TypedArrayInterface $uint16be;
+    private readonly TypedArrayInterface $uint16;
     private readonly TypedArrayInterface $int32;
-    private readonly TypedArrayInterface $uint32le;
-    private readonly TypedArrayInterface $uint32be;
+    private readonly TypedArrayInterface $uint32;
     private readonly TypedArrayInterface $int64;
+    private readonly TypedArrayInterface $float32;
+    private readonly TypedArrayInterface $float64;
 
     public function prepare(): void
     {
@@ -42,12 +44,12 @@ final class ArrayWriteBench
         $this->int8 = Int8Array::new(2);
         $this->uint8 = UInt8Array::new(2);
         $this->int16 = Int16Array::new(2);
-        $this->uint16le = UInt16Array::new(2, Endianness::LITTLE);
-        $this->uint16be = UInt16Array::new(2, Endianness::BIG);
+        $this->uint16 = UInt16Array::new(2);
         $this->int32 = Int32Array::new(2);
-        $this->uint32le = UInt32Array::new(2, Endianness::LITTLE);
-        $this->uint32be = UInt32Array::new(2, Endianness::BIG);
+        $this->uint32 = UInt32Array::new(2);
         $this->int64 = Int64Array::new(2);
+        $this->float32 = Float32Array::new(2);
+        $this->float64 = Float64Array::new(2);
     }
 
     public function benchNative(): void
@@ -80,16 +82,10 @@ final class ArrayWriteBench
         $this->int16[1] = 32767;
     }
 
-    public function benchPackedUInt16le(): void
+    public function benchPackedUInt16(): void
     {
-        $this->uint16le[0] = 0;
-        $this->uint16le[1] = 65535;
-    }
-
-    public function benchPackedUInt16be(): void
-    {
-        $this->uint16be[0] = 0;
-        $this->uint16be[1] = 65535;
+        $this->uint16[0] = 0;
+        $this->uint16[1] = 65535;
     }
 
     public function benchPackedInt32(): void
@@ -98,21 +94,27 @@ final class ArrayWriteBench
         $this->int32[1] = 2147483647;
     }
 
-    public function benchPackedUInt32le(): void
+    public function benchPackedUInt32(): void
     {
-        $this->uint32le[0] = 0;
-        $this->uint32le[1] = 4294967295;
-    }
-
-    public function benchPackedUInt32be(): void
-    {
-        $this->uint32be[0] = 0;
-        $this->uint32be[1] = 4294967295;
+        $this->uint32[0] = 0;
+        $this->uint32[1] = 4294967295;
     }
 
     public function benchPackedInt64(): void
     {
         $this->int64[0] = \PHP_INT_MIN;
         $this->int64[1] = \PHP_INT_MAX;
+    }
+
+    public function benchPackedFloat32(): void
+    {
+        $this->float32[0] = Float32Array::ELEMENT_MIN_VALUE;
+        $this->float32[1] = Float32Array::ELEMENT_MAX_VALUE;
+    }
+
+    public function benchPackedFloat64(): void
+    {
+        $this->float64[0] = \PHP_FLOAT_MIN;
+        $this->float64[1] = \PHP_FLOAT_MAX;
     }
 }
