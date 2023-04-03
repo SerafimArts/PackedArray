@@ -11,6 +11,7 @@ use PhpBench\Attributes\Warmup;
 use Serafim\PackedArray\Endianness;
 use Serafim\PackedArray\Int16Array;
 use Serafim\PackedArray\Int32Array;
+use Serafim\PackedArray\Int64Array;
 use Serafim\PackedArray\Int8Array;
 use Serafim\PackedArray\TypedArrayInterface;
 use Serafim\PackedArray\UInt16Array;
@@ -31,6 +32,7 @@ final class ArrayReadBench
     private readonly TypedArrayInterface $int32;
     private readonly TypedArrayInterface $uint32le;
     private readonly TypedArrayInterface $uint32be;
+    private readonly TypedArrayInterface $int64;
 
     public function prepare(): void
     {
@@ -45,6 +47,7 @@ final class ArrayReadBench
         $this->int32 = Int32Array::new(2);
         $this->uint32le = UInt32Array::new(2, Endianness::LITTLE);
         $this->uint32be = UInt32Array::new(2, Endianness::BIG);
+        $this->int64 = Int64Array::new(2);
 
         // Init min/max bounds
         foreach (\get_object_vars($this) as $value) {
@@ -113,5 +116,11 @@ final class ArrayReadBench
     {
         $min = $this->uint32be[0];
         $max = $this->uint32be[1];
+    }
+
+    public function benchPackedInt64(): void
+    {
+        $min = $this->int64[0];
+        $max = $this->int64[1];
     }
 }

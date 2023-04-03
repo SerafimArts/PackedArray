@@ -13,69 +13,37 @@ use Serafim\PackedArray\Exception\ValueTypeException;
 /**
  * @generated Please note that this class has been generated.
  *
- * @template-extends TypedArray<{{ sample.type }}<{{ sample.fromDocBlock }}, {{ sample.toDocBlock }}>>
+ * @template-extends TypedArray<int<-9223372036854775808, 9223372036854775807>>
  */
-final class {{ sample.class }} extends TypedArray
+final class Int64Array extends TypedArray
 {
     /**
      * The constant represents the size in bytes of each element in a typed array.
      *
      * @var int<1, max>
      */
-    public const ELEMENT_BYTES = {{ sample.bytesPerElement }};
+    public const ELEMENT_BYTES = 8;
 
     /**
      * The minimal available value of the element.
      *
-     * @var {{ sample.type }}<{{ sample.fromDocBlock }}, {{ sample.toDocBlock }}>
+     * @var int<-9223372036854775808, 9223372036854775807>
      */
-    public const ELEMENT_MIN_VALUE = {{ sample.from }};
+    public const ELEMENT_MIN_VALUE = \PHP_INT_MIN;
 
     /**
      * The maximal available value of the element.
      *
-     * @var {{ sample.type }}<{{ sample.fromDocBlock }}, {{ sample.toDocBlock }}>
+     * @var int<-9223372036854775808, 9223372036854775807>
      */
-    public const ELEMENT_MAX_VALUE = {{ sample.to }};
+    public const ELEMENT_MAX_VALUE = \PHP_INT_MAX;
 
-{% if sample.endianness %}
-    public readonly Endianness $endianness;
-
-    public function __construct(
-        string $bytes,
-        Endianness $endianness = null,
-    ) {
-{% if sample.precondition %}
-        {{ sample.precondition | raw }}
-
-{% endif %}
-        $this->endianness = $endianness ?? Endianness::auto();
-
-        parent::__construct($bytes, self::ELEMENT_BYTES);
-    }
-
-    public static function fromBytes(
-        string $bytes,
-        Endianness $endianness = null,
-    ): self {
-        return new self($bytes, $endianness);
-    }
-
-    public static function new(
-        int $size,
-        Endianness $endianness = null,
-    ): self {
-        assert($size >= 0, ArraySizeException::fromUnderflow('{{ sample.class }}', $size));
-
-        return self::fromBytes(\str_repeat("\0", $size * self::ELEMENT_BYTES), $endianness);
-    }
-{% else %}
     public function __construct(string $bytes)
     {
-{% if sample.precondition %}
-        {{ sample.precondition | raw }}
+        if (\PHP_INT_SIZE < self::ELEMENT_BYTES) {
+            throw new \LogicException('The current platform does not support int64 arrays');
+        }
 
-{% endif %}
         parent::__construct($bytes, self::ELEMENT_BYTES);
     }
 
@@ -86,11 +54,10 @@ final class {{ sample.class }} extends TypedArray
 
     public static function new(int $size): self
     {
-        assert($size >= 0, ArraySizeException::fromUnderflow('{{ sample.class }}', $size));
+        assert($size >= 0, ArraySizeException::fromUnderflow('Int64Array', $size));
 
         return self::fromBytes(\str_repeat("\0", $size * self::ELEMENT_BYTES));
     }
-{% endif %}
 
     /**
      * @param int<0, max> $offset
@@ -105,24 +72,24 @@ final class {{ sample.class }} extends TypedArray
     /**
      * @param int<0, max> $offset
      *
-     * @return {{ sample.type }}<{{ sample.fromDocBlock }}, {{ sample.toDocBlock }}>
+     * @return int<-9223372036854775808, 9223372036854775807>
      *
      * @psalm-suppress MoreSpecificReturnType : The type in the docblock is more
      *                 restrictive than the type specified in the return type.
      * @psalm-suppress LessSpecificReturnStatement : Same to "MoreSpecificReturnType"
      */
-    public function offsetGet(mixed $offset): {{ sample.type }}
+    public function offsetGet(mixed $offset): int
     {
         assert(\is_int($offset), OffsetTypeException::fromInvalidType((string)$this, $offset));
         assert($offset >= 0, OffsetRangeException::fromUnderflow((string)$this, $offset));
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
-        return {{ sample.unpack | raw }}
+        return (int)(\unpack('q', \substr($this->data, $offset, 8))[1]);
     }
 
     /**
      * @param int<0, max> $offset
-     * @param {{ sample.type }}<{{ sample.fromDocBlock }}, {{ sample.toDocBlock }}> $value
+     * @param int<-9223372036854775808, 9223372036854775807> $value
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
@@ -130,11 +97,18 @@ final class {{ sample.class }} extends TypedArray
         assert($offset >= 0, OffsetRangeException::fromUnderflow((string)$this, $offset));
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
-        assert(\is_{{ sample.type }}($value), ValueTypeException::fromInvalidType((string)$this, $value));
-        assert($value >= {{ sample.from }}, ValueRangeException::fromUnderflow((string)$this, $value));
-        assert($value <= {{ sample.to }}, ValueRangeException::fromOverflow((string)$this, $value));
+        assert(\is_int($value), ValueTypeException::fromInvalidType((string)$this, $value));
+        assert($value >= \PHP_INT_MIN, ValueRangeException::fromUnderflow((string)$this, $value));
+        assert($value <= \PHP_INT_MAX, ValueRangeException::fromOverflow((string)$this, $value));
 
-        {{ sample.pack | raw }}
+        $this->data[$offset] = \chr($value);
+        $this->data[$offset + 1] = \chr($value >> 8);
+        $this->data[$offset + 2] = \chr($value >> 16);
+        $this->data[$offset + 3] = \chr($value >> 24);
+        $this->data[$offset + 4] = \chr($value >> 32);
+        $this->data[$offset + 5] = \chr($value >> 40);
+        $this->data[$offset + 6] = \chr($value >> 48);
+        $this->data[$offset + 7] = \chr($value >> 56);
     }
 
     /**
@@ -146,12 +120,19 @@ final class {{ sample.class }} extends TypedArray
         assert($offset >= 0, OffsetRangeException::fromUnderflow((string)$this, $offset));
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
-        $value = {{ sample.default }};
-        {{ sample.pack | raw }}
+        $value = 0;
+        $this->data[$offset] = \chr($value);
+        $this->data[$offset + 1] = \chr($value >> 8);
+        $this->data[$offset + 2] = \chr($value >> 16);
+        $this->data[$offset + 3] = \chr($value >> 24);
+        $this->data[$offset + 4] = \chr($value >> 32);
+        $this->data[$offset + 5] = \chr($value >> 40);
+        $this->data[$offset + 6] = \chr($value >> 48);
+        $this->data[$offset + 7] = \chr($value >> 56);
     }
 
     /**
-     * @return \Traversable<int<0, max>, {{ sample.type }}<{{ sample.fromDocBlock }}, {{ sample.toDocBlock }}>>
+     * @return \Traversable<int<0, max>, int<-9223372036854775808, 9223372036854775807>>
      *
      * @psalm-suppress MoreSpecificReturnType : The type in the docblock is more
      *                 restrictive than the type specified in method's body.
@@ -159,14 +140,8 @@ final class {{ sample.class }} extends TypedArray
      */
     public function getIterator(): \Traversable
     {
-        for ($offset = 0; $offset < $this->bytes; {% apply spaceless %}
-            {% if sample.bytesPerElement > 1 %}
-                $offset += {{ sample.bytesPerElement }}
-            {% else %}
-                ++$offset
-            {% endif %}
-        {% endapply %}) {
-            yield $offset => {{ sample.unpack | raw }}
+        for ($offset = 0; $offset < $this->bytes; $offset += 8) {
+            yield $offset => (int)(\unpack('q', \substr($this->data, $offset, 8))[1]);
         }
     }
 }

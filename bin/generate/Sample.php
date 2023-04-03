@@ -17,12 +17,21 @@ class Sample
         public string $class,
         public string $type,
         public string $default,
-        public int|float $from,
-        public int|float $to,
+        public int|float|string $from,
+        public int|float|string $to,
         public int $bytesPerElement,
         public string $unpack,
         public string $pack,
         public bool $endianness = false,
+        public ?string $precondition = null,
+        public ?string $fromDocBlock = null,
+        public ?string $toDocBlock = null,
     ) {
+        if ($this->fromDocBlock === null) {
+            $this->fromDocBlock = (string)$this->from;
+        }
+        if ($this->toDocBlock === null) {
+            $this->toDocBlock = (string)$this->to;
+        }
     }
 }

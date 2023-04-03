@@ -12,6 +12,7 @@ use Serafim\PackedArray\Exception\OffsetTypeException;
 use Serafim\PackedArray\Exception\ValueRangeException;
 use Serafim\PackedArray\Int16Array;
 use Serafim\PackedArray\Int32Array;
+use Serafim\PackedArray\Int64Array;
 use Serafim\PackedArray\Int8Array;
 use Serafim\PackedArray\TypedArray;
 use Serafim\PackedArray\UInt16Array;
@@ -23,7 +24,7 @@ final class ReadWriteTest extends TestCase
 {
     public static function arraysDataProvider(): array
     {
-        return [
+        $result = [
             Int8Array::class          => [Int8Array::new(1)],
             UInt8Array::class         => [UInt8Array::new(1)],
 
@@ -37,6 +38,12 @@ final class ReadWriteTest extends TestCase
             UInt32Array::class . 'BE' => [UInt32Array::new(1, Endianness::BIG)],
             UInt32Array::class . 'LE' => [UInt32Array::new(1, Endianness::LITTLE)],
         ];
+
+        if (\PHP_INT_SIZE >= 8) {
+            $result[Int64Array::class] = [Int64Array::new(1)];
+        }
+
+        return $result;
     }
 
     #[DataProvider('arraysDataProvider')]
@@ -83,7 +90,7 @@ final class ReadWriteTest extends TestCase
     {
         $array = clone $array;
 
-        $array[0] = $array::ELEMENT_MIN_VALUE;
+        $array[0] = (int)$array::ELEMENT_MIN_VALUE;
         $this->assertSame($array[0], $array::ELEMENT_MIN_VALUE);
     }
 
@@ -118,6 +125,10 @@ final class ReadWriteTest extends TestCase
     {
         $this->skipIfAssertionDisabled();
 
+        if ($array::ELEMENT_MIN_VALUE === \PHP_INT_MIN) {
+            $this->markTestSkipped('Exactly the same error as in the case of passing an incorrect type');
+        }
+
         $this->expectException(ValueRangeException::class);
         $this->expectExceptionMessage('Can not assign value');
 
@@ -129,6 +140,10 @@ final class ReadWriteTest extends TestCase
     public function testMaxBoundOverflow(TypedArray $array): void
     {
         $this->skipIfAssertionDisabled();
+
+        if ($array::ELEMENT_MAX_VALUE === \PHP_INT_MAX) {
+            $this->markTestSkipped('Exactly the same error as in the case of passing an incorrect type');
+        }
 
         $this->expectException(ValueRangeException::class);
         $this->expectExceptionMessage('Can not assign value');

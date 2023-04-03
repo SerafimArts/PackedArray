@@ -34,6 +34,6 @@ abstract class TestCase extends BaseTestCase
             return;
         }
 
-        $this->markTestSkipped('zend.assertions=1 or zend.assertions=0 php.ini option is required to perform this test');
+        $this->markTestIncomplete('zend.assertions=1 or zend.assertions=0 php.ini option is required to perform this test');
     }
 }

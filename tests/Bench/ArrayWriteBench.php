@@ -11,6 +11,7 @@ use PhpBench\Attributes\Warmup;
 use Serafim\PackedArray\Endianness;
 use Serafim\PackedArray\Int16Array;
 use Serafim\PackedArray\Int32Array;
+use Serafim\PackedArray\Int64Array;
 use Serafim\PackedArray\Int8Array;
 use Serafim\PackedArray\TypedArrayInterface;
 use Serafim\PackedArray\UInt16Array;
@@ -31,6 +32,7 @@ final class ArrayWriteBench
     private readonly TypedArrayInterface $int32;
     private readonly TypedArrayInterface $uint32le;
     private readonly TypedArrayInterface $uint32be;
+    private readonly TypedArrayInterface $int64;
 
     public function prepare(): void
     {
@@ -45,6 +47,7 @@ final class ArrayWriteBench
         $this->int32 = Int32Array::new(2);
         $this->uint32le = UInt32Array::new(2, Endianness::LITTLE);
         $this->uint32be = UInt32Array::new(2, Endianness::BIG);
+        $this->int64 = Int64Array::new(2);
     }
 
     public function benchNative(): void
@@ -105,5 +108,11 @@ final class ArrayWriteBench
     {
         $this->uint32be[0] = 0;
         $this->uint32be[1] = 4294967295;
+    }
+
+    public function benchPackedInt64(): void
+    {
+        $this->int64[0] = \PHP_INT_MIN;
+        $this->int64[1] = \PHP_INT_MAX;
     }
 }
