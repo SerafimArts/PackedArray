@@ -13,12 +13,16 @@ use Serafim\PackedArray\Exception\ValueRangeException;
 use Serafim\PackedArray\Int16Array;
 use Serafim\PackedArray\Int24Array;
 use Serafim\PackedArray\Int32Array;
+use Serafim\PackedArray\Int40Array;
+use Serafim\PackedArray\Int48Array;
 use Serafim\PackedArray\Int64Array;
 use Serafim\PackedArray\Int8Array;
 use Serafim\PackedArray\TypedArray;
 use Serafim\PackedArray\UInt16Array;
 use Serafim\PackedArray\UInt24Array;
 use Serafim\PackedArray\UInt32Array;
+use Serafim\PackedArray\UInt40Array;
+use Serafim\PackedArray\UInt48Array;
 use Serafim\PackedArray\UInt8Array;
 
 #[Group('unit'), Group('packed-array')]
@@ -47,6 +51,16 @@ final class ReadWriteTest extends TestCase
         ];
 
         if (\PHP_INT_SIZE >= 8) {
+            $result[Int40Array::class ] = [Int40Array::new(1)];
+            $result[UInt40Array::class] = [UInt40Array::new(1)];
+            $result[UInt40Array::class . 'BE'] = [UInt40Array::new(1, Endianness::BIG)];
+            $result[UInt40Array::class . 'LE'] = [UInt40Array::new(1, Endianness::LITTLE)];
+
+            $result[Int48Array::class ] = [Int48Array::new(1)];
+            $result[UInt48Array::class] = [UInt48Array::new(1)];
+            $result[UInt48Array::class . 'BE'] = [UInt48Array::new(1, Endianness::BIG)];
+            $result[UInt48Array::class . 'LE'] = [UInt48Array::new(1, Endianness::LITTLE)];
+
             $result[Int64Array::class] = [Int64Array::new(1)];
         }
 
