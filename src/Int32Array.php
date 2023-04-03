@@ -29,7 +29,7 @@ final class Int32Array extends TypedArray
      *
      * @var int<-2147483648, 2147483647>
      */
-    public const ELEMENT_MIN_VALUE = -2147483648;
+    public const ELEMENT_MIN_VALUE = -2147483647-1;
 
     /**
      * The maximal available value of the element.
@@ -94,7 +94,7 @@ final class Int32Array extends TypedArray
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
         assert(\is_int($value), ValueTypeException::fromInvalidType((string)$this, $value));
-        assert($value >= -2147483648, ValueRangeException::fromUnderflow((string)$this, $value));
+        assert($value >= -2147483647-1, ValueRangeException::fromUnderflow((string)$this, $value));
         assert($value <= 2147483647, ValueRangeException::fromOverflow((string)$this, $value));
 
         $this->data[$offset] = \chr($value);

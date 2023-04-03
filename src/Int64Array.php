@@ -29,14 +29,14 @@ final class Int64Array extends TypedArray
      *
      * @var int<-9223372036854775808, 9223372036854775807>
      */
-    public const ELEMENT_MIN_VALUE = \PHP_INT_MIN;
+    public const ELEMENT_MIN_VALUE = -9223372036854775807-1;
 
     /**
      * The maximal available value of the element.
      *
      * @var int<-9223372036854775808, 9223372036854775807>
      */
-    public const ELEMENT_MAX_VALUE = \PHP_INT_MAX;
+    public const ELEMENT_MAX_VALUE = 9223372036854775807;
 
     public function __construct(string $bytes)
     {
@@ -98,8 +98,8 @@ final class Int64Array extends TypedArray
         assert($offset < $this->length, OffsetRangeException::fromOverflow((string)$this, $offset, $this->length));
 
         assert(\is_int($value), ValueTypeException::fromInvalidType((string)$this, $value));
-        assert($value >= \PHP_INT_MIN, ValueRangeException::fromUnderflow((string)$this, $value));
-        assert($value <= \PHP_INT_MAX, ValueRangeException::fromOverflow((string)$this, $value));
+        assert($value >= -9223372036854775807-1, ValueRangeException::fromUnderflow((string)$this, $value));
+        assert($value <= 9223372036854775807, ValueRangeException::fromOverflow((string)$this, $value));
 
         $this->data[$offset] = \chr($value);
         $this->data[$offset + 1] = \chr($value >> 8);

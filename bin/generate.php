@@ -83,7 +83,8 @@ $samples = [
         class: 'Int32Array',
         type: 'int',
         default: '0',
-        from: -2147483648,
+        // Avoid int32 overflow on x86 platforms
+        from: '-2147483647-1',
         to: 2147483647,
         bytesPerElement: 4,
         unpack: <<<'PHP'
@@ -95,6 +96,7 @@ $samples = [
             $this->data[$offset + 2] = \chr($value >> 16);
             $this->data[$offset + 3] = \chr($value >> 24);
             PHP,
+        fromDocBlock: '-2147483648'
     ),
     new Sample(
         class: 'UInt32Array',
@@ -125,10 +127,9 @@ $samples = [
         class: 'Int64Array',
         type: 'int',
         default: '0',
-        // PHP bug of the literal int64 min bound value
-        // @link https://github.com/php/php-src/issues/10998
-        from: '\\PHP_INT_MIN',
-        to: '\\PHP_INT_MAX',
+        // Avoid int64 overflow on x64 platforms
+        from: '-9223372036854775807-1',
+        to: '9223372036854775807',
         bytesPerElement: 8,
         unpack: <<<'PHP'
             (int)(\unpack('q', \substr($this->data, $offset, 8))[1]);
@@ -149,7 +150,6 @@ $samples = [
             }
             PHP,
         fromDocBlock: (string)\PHP_INT_MIN,
-        toDocBlock: (string)\PHP_INT_MAX,
     ),
 ];
 
